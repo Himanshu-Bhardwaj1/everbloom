@@ -38,9 +38,8 @@ const AddMemoryModal = (props) => {
             setImageUri(result.assets[0].uri);
         }
     };
-    const saveImageUrl = useCallback(async (url) => {
-
-
+    const saveImageUrl = useCallback(async (url, caption) => {
+        console.log(caption);
         if (!url) return;
         const newMemoryRequest = {
             imageUrl: url,
@@ -106,7 +105,7 @@ const AddMemoryModal = (props) => {
         // uploadToCloudinary(imageUri)
         //     .then((url) => {
         //         if (url) {
-        //             saveImageUrl(url);
+        //             saveImageUrl(url, caption);
         //             showInfo('Success', 'Memory added successfully!');
         //         } else {
         //             showInfo('Error', 'Failed to upload image.');
@@ -120,8 +119,8 @@ const AddMemoryModal = (props) => {
     }
 
     return (
-        <View style={{ marginTop: 100 }}>
-            <Modal visible={props.visible} animationType={props.animationType || 'slide'}>
+        <Modal visible={props.visible} animationType="slide" transparent>
+            <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
                     <TouchableOpacity onPress={props.onClose}>
                         <Text style={styles.closeText}>✕</Text>
@@ -157,8 +156,8 @@ const AddMemoryModal = (props) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </Modal>
-        </View>
+            </View>
+        </Modal>
     );
 };
 
@@ -172,7 +171,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     closeText: {
-        fontSize: 28,
+        fontSize: 24,
         color: '#000',
     },
     title: {
@@ -251,6 +250,12 @@ const styles = StyleSheet.create({
     addButtonText: {
         color: '#fff',
         fontWeight: 'bold',
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(255,255,255,0.97)', // or a shade of white
+        justifyContent: 'center',
+        paddingHorizontal: 20,
     },
 });
 

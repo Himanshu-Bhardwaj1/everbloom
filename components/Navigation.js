@@ -25,6 +25,11 @@ const navItems = [
         icon: ScrollText,
         label: 'Story',
     },
+    {
+        route: 'Reason',
+        icon: ScrollText,
+        label: 'Reason',
+    },
 ];
 
 const Navigation = () => {

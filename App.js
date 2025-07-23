@@ -4,6 +4,7 @@ import GlobalErrorCard from './components/GlobalErrorCard'
 import AppNavigator from './components/AppNavigator'
 import SplashScreen from './screens/SplashScreen'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 function App() {
   const [loading, setLoading] = useState(true)

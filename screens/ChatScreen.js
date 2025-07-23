@@ -1,4 +1,4 @@
-import { useState } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react';
 import {
     View,
     Text,
@@ -8,226 +8,167 @@ import {
     StyleSheet,
     KeyboardAvoidingView,
     Platform,
-    SafeAreaView,
-} from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import { ArrowLeft, Send } from 'lucide-react-native'
+} from 'react-native';
 
 const ChatScreen = () => {
-    const navigation = useNavigation()
-    const [messageText, setMessageText] = useState('')
-    const [messages, setMessages] = useState([
-        {
-            id: 1,
-            text: "Hey love! How's your day going?",
-            sender: 'partner',
-            timestamp: '10:30 AM',
-        },
-        {
-            id: 2,
-            text: "It's going great! Just finished that project I was telling you about.",
-            sender: 'me',
-            timestamp: '10:32 AM',
-        },
-        {
-            id: 3,
-            text: "That's amazing! I'm so proud of you ❤️",
-            sender: 'partner',
-            timestamp: '10:33 AM',
-        },
-        {
-            id: 4,
-            text: "Thanks! Can't wait to tell you all about it tonight.",
-            sender: 'me',
-            timestamp: '10:35 AM',
-        },
-        {
-            id: 5,
-            text: "I'm looking forward to our dinner date! I miss you so much.",
-            sender: 'partner',
-            timestamp: '10:36 AM',
-        },
-    ])
+    const socketRef = useRef(null);
+    const [input, setInput] = useState('');
+    const [messages, setMessages] = useState([]);
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:8080/ws/chat');
+        socketRef.current = ws;
+
+        ws.onopen = () => {
+            console.log('Connected to chat WebSocket');
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("From:", data.from);
+            console.log("Message:", data.message);
+            const message = {
+                text: data.text,
+                timestamp: Date.now(),
+                fromSelf: false,
+            };
+            setMessages((prev) => [...prev, message]);
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
 
     const sendMessage = () => {
-        if (messageText.trim() === '') return
-        const newMessage = {
-            id: messages.length + 1,
-            text: messageText,
-            sender: 'me',
-            timestamp: new Date().toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-            }),
-        }
-        setMessages([...messages, newMessage])
-        setMessageText('')
-        setTimeout(() => {
-            const responseMessage = {
-                id: messages.length + 2,
-                text: "That's wonderful! I can't wait to hear more about it ❤️",
-                sender: 'partner',
-                timestamp: new Date().toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                }),
-            }
-            setMessages((prev) => [...prev, responseMessage])
-        }, 1500)
-    }
+        if (!input.trim()) return;
+
+        const message = {
+            text: input,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            fromSelf: true,
+        };
+
+        socketRef.current.send(JSON.stringify(message));
+        setMessages((prev) => [...prev, message]);
+        setInput('');
+    };
 
     const renderItem = ({ item }) => (
         <View
             style={[
                 styles.messageContainer,
-                item.sender === 'me' ? styles.messageRight : styles.messageLeft,
+                item.fromSelf ? styles.rightAlign : styles.leftAlign,
             ]}
         >
             <View
                 style={[
                     styles.bubble,
-                    item.sender === 'me' ? styles.bubbleMe : styles.bubblePartner,
+                    item.fromSelf ? styles.selfBubble : styles.partnerBubble,
                 ]}
             >
-                <Text style={item.sender === 'me' ? styles.textMe : styles.textPartner}>
+                <Text style={item.fromSelf ? styles.selfText : styles.partnerText}>
                     {item.text}
                 </Text>
             </View>
-            <Text
-                style={[
-                    styles.timestamp,
-                    item.sender === 'me' ? styles.timestampRight : styles.timestampLeft,
-                ]}
-            >
-                {item.timestamp}
-            </Text>
+            <Text style={styles.timestamp}>{item.timestamp}</Text>
         </View>
-    )
+    );
 
     return (
-        <SafeAreaView style={styles.safeArea}>
-            <KeyboardAvoidingView
-                style={styles.container}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                keyboardVerticalOffset={90}
-            >
-                {/* Header */}
-                <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                        <ArrowLeft size={24} color="#be185d" />
-                    </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Love Chat</Text>
-                </View>
-                {/* Messages */}
-                <FlatList
-                    data={messages}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString()}
-                    contentContainerStyle={styles.messagesList}
-                    inverted
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+            <FlatList
+                data={messages}
+                renderItem={renderItem}
+                keyExtractor={(_, index) => index.toString()}
+                contentContainerStyle={styles.messages}
+            />
+
+            <View style={styles.inputRow}>
+                <TextInput
+                    style={styles.input}
+                    value={input}
+                    onChangeText={setInput}
+                    placeholder="Type your message..."
+                    placeholderTextColor="#c4a2b5"
                 />
-                {/* Input Area */}
-                <View style={styles.inputArea}>
-                    <TextInput
-                        value={messageText}
-                        onChangeText={setMessageText}
-                        placeholder="Type your message..."
-                        style={styles.input}
-                        placeholderTextColor="#be185d99"
-                    />
-                    <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-                        <Send size={22} color="#fff" />
-                    </TouchableOpacity>
-                </View>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
-    )
-}
+                <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+                    <Text style={{ fontSize: 20, color: '#fff' }}>➤</Text>
+                </TouchableOpacity>
+            </View>
+        </KeyboardAvoidingView>
+    );
+};
 
 const styles = StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: '#fdf2f8' },
-    container: { flex: 1 },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        paddingHorizontal: 16,
-        paddingVertical: 14,
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-        elevation: 2,
+    container: {
+        flex: 1,
+        backgroundColor: '#ffeef5',
     },
-    backButton: { marginRight: 16 },
-    headerTitle: {
-        fontSize: 22,
-        fontFamily: 'serif',
-        color: '#be185d',
-        fontWeight: 'bold',
-    },
-    messagesList: {
-        flexGrow: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: 16,
-        paddingVertical: 8,
+    messages: {
+        padding: 16,
     },
     messageContainer: {
+        marginBottom: 16,
         maxWidth: '80%',
-        marginBottom: 12,
     },
-    messageLeft: { alignSelf: 'flex-start' },
-    messageRight: { alignSelf: 'flex-end' },
+    leftAlign: {
+        alignSelf: 'flex-start',
+    },
+    rightAlign: {
+        alignSelf: 'flex-end',
+    },
     bubble: {
         padding: 12,
-        borderRadius: 20,
+        borderRadius: 16,
     },
-    bubbleMe: {
-        backgroundColor: '#f472b6',
-        borderTopRightRadius: 0,
-    },
-    bubblePartner: {
+    partnerBubble: {
         backgroundColor: '#fff',
         borderTopLeftRadius: 0,
-        borderWidth: 1,
-        borderColor: '#fbcfe8',
     },
-    textMe: { color: '#fff', fontSize: 16 },
-    textPartner: { color: '#374151', fontSize: 16 },
+    selfBubble: {
+        backgroundColor: '#f264b3',
+        borderTopRightRadius: 0,
+    },
+    partnerText: {
+        color: '#1f2937',
+        fontSize: 15,
+    },
+    selfText: {
+        color: '#fff',
+        fontSize: 15,
+    },
     timestamp: {
         fontSize: 12,
-        marginTop: 4,
         color: '#6b7280',
+        marginTop: 4,
     },
-    timestampLeft: { textAlign: 'left' },
-    timestampRight: { textAlign: 'right' },
-    inputArea: {
+    inputRow: {
         flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
+        padding: 12,
+        backgroundColor: '#fff0f7',
         borderTopWidth: 1,
-        borderColor: '#fbcfe8',
-        padding: 10,
+        borderColor: '#f0cce2',
     },
     input: {
         flex: 1,
-        borderWidth: 1,
-        borderColor: '#fbcfe8',
-        borderRadius: 25,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        fontSize: 16,
-        color: '#be185d',
-        backgroundColor: '#fff',
+        padding: 12,
+        borderRadius: 24,
+        backgroundColor: '#fce6f1',
+        color: '#000',
     },
     sendButton: {
         marginLeft: 8,
-        backgroundColor: '#ec4899',
-        borderRadius: 25,
-        padding: 10,
+        backgroundColor: '#f264b3',
+        borderRadius: 24,
+        padding: 12,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 2,
     },
-})
+});
 
-export default ChatScreen
+
+export default ChatScreen;

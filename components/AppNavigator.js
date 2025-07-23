@@ -3,18 +3,19 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
 
 // Import your screens
-import MemoriesScreen from '../screens/MemoriesScreen'
+import MemoriesScreenNew from '../screens/MemoriesScreenNew'
 import StoryScreen from '../screens/StoryScreen'
 import HomeScreen from '../screens/HomeScreen'
 import ChatScreen from '../screens/ChatScreen'
 import Layout from './Layout'
+import ReasonsScreen from '../screens/ReasonScreen'
 
 const Stack = createNativeStackNavigator()
 
 // Screen wrapper components
 const MemoriesScreenWrapper = () => (
     <Layout>
-        <MemoriesScreen />
+        <MemoriesScreenNew />
     </Layout>
 )
 
@@ -33,6 +34,13 @@ const HomeScreenWrapper = () => (
 const ChatScreenWrapper = () => (
     <Layout>
         <ChatScreen />
+    </Layout>
+)
+
+
+const ReasonScreenWrapper = () => (
+    <Layout>
+        <ReasonsScreen />
     </Layout>
 )
 
@@ -58,8 +66,8 @@ const AppNavigator = () => {
                     component={TimelineScreenWrapper}
                 />
                 <Stack.Screen
-                    name="Chat"
-                    component={ChatScreenWrapper}
+                    name="Reason"
+                    component={ReasonScreenWrapper}
                 />
             </Stack.Navigator>
         </NavigationContainer>

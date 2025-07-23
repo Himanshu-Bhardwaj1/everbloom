@@ -59,8 +59,11 @@ const AddStoryBottomSheet = (props) => {
     };
 
     return (
-        <Modal visible={props.visible} onClose={props.onClose} >
+        <Modal visible={props.visible} onClose={props.onClose} animationType="slide">
             <View style={styles.contentContainer}>
+                <TouchableOpacity onPress={props.onClose}>
+                    <Text style={styles.closeText}>✕</Text>
+                </TouchableOpacity>
                 <Text style={styles.heading}>Add a Story</Text>
 
                 <TextInput
@@ -147,6 +150,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 12,
+        textAlign: 'center',
     },
     input: {
         backgroundColor: '#f6f2f5',
@@ -202,6 +206,10 @@ const styles = StyleSheet.create({
 
     iconButtonSelected: {
         backgroundColor: '#7c3aed',
+    },
+    closeText: {
+        fontSize: 24,
+        color: '#000',
     },
 
 });
