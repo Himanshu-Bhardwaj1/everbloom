@@ -8,7 +8,15 @@ import {
     TouchableOpacity,
     Modal,
     Animated,
+    StatusBar,
+    Dimensions
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+const screenWidth = Dimensions.get('window').width
+const screenHeight = Dimensions.get('window').height
+const CARD_MARGIN = 12
+const CARD_WIDTH = (screenWidth - CARD_MARGIN * 3) / 2
 
 const initialReasons = [
     { id: '0', title: 'You’re the light of my life 💖', image: { uri: 'https://res.cloudinary.com/dq9a9g7en/image/upload/v1752613266/dq2dcducif3pdhmyiffm.jpg' }, openedOn: "2025-07-19" },
@@ -80,14 +88,23 @@ export default function ReasonScreen() {
     const renderItem = ({ item }) => (
         <TouchableOpacity onPress={() => setSelectedReason(item)} style={styles.card} activeOpacity={0.8}>
             <Image source={item.image} style={styles.image} />
-            <Text style={styles.label}>{item.title}</Text>
+            <View style={styles.captionContainer}>
+                <Text style={styles.caption}>{item.title}</Text>
+            </View>
         </TouchableOpacity>
     );
 
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Reasons I Love You</Text>
+            <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+            <View style={styles.header}>
+                <TouchableOpacity>
+                    <Ionicons name="arrow-back" size={24} color="#be185d" />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Reasons</Text>
+                <View style={{ width: 24 }} />
+            </View>
 
             <FlatList
                 data={reasons}
@@ -107,7 +124,7 @@ export default function ReasonScreen() {
                     <View style={styles.modalOverlay}>
                         <TouchableOpacity style={styles.modalCloseArea} onPress={() => setSelectedReason(null)} />
                         <TouchableOpacity onPress={() => setSelectedReason(null)} style={styles.closeButton}>
-                            <Text style={styles.closeIconText}>✕</Text>
+                            <Ionicons name="close" size={30} color="#fff" />
                         </TouchableOpacity>
                         <View style={styles.selectedReasonModalContent}>
                             <Image source={selectedReason.image} style={styles.selectedReasonImage} />
@@ -155,10 +172,8 @@ export default function ReasonScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#1c1b1e',
         flex: 1,
-        paddingTop: 40,
-        paddingHorizontal: 16,
+        backgroundColor: '#fdf2f8',
     },
     title: {
         fontSize: 24,
@@ -171,12 +186,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     card: {
-        backgroundColor: '#2a2a2e',
-        borderRadius: 16,
-        padding: 12,
-        marginBottom: 16,
-        width: '48%',
-        alignItems: 'center',
+        width: CARD_WIDTH,
+        aspectRatio: 1,
+        margin: CARD_MARGIN / 2,
+        borderRadius: 12,
+        overflow: 'hidden',
+        backgroundColor: '#fff',
     },
     image: {
         width: '100%',
@@ -275,11 +290,13 @@ const styles = StyleSheet.create({
     },
 
     closeButton: {
-        alignSelf: 'flex-end',
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 25,
-        marginTop: 10,
+        position: 'absolute',
+        top: 50,
+        right: 20,
+        zIndex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 25,
+        padding: 10,
     },
     closeButtonText: {
         fontWeight: 'bold',
@@ -302,5 +319,33 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white'
     },
-
+    header: {
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        justifyContent: 'space-between',
+        elevation: 2,
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#be185d',
+    },
+    captionContainer: {
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        padding: 8,
+        width: '100%',
+    },
+    caption: {
+        color: '#fff',
+        fontSize: 13,
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+    },
 });
