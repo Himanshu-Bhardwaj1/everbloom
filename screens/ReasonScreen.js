@@ -56,9 +56,9 @@ export default function ReasonScreen() {
             console.log(reasonsList);
 
             // Trigger modal if any reason should be revealed today
-            const revealableReasons = reasonsList.filter(
-                r => !r.opened && r.revealOn <= Date.now()
-            );
+            const revealableReasons = reasonsList
+                .filter(r => !r.opened && r.revealOn <= Date.now())
+                .sort((a, b) => a.revealOn - b.revealOn);
 
             if (revealableReasons.length > 0) {
                 setRevealQueue(revealableReasons);

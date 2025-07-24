@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import {
     View,
-    Text,
-    TouchableOpacity,
     StyleSheet,
     Dimensions,
     StatusBar,

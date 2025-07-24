@@ -54,7 +54,7 @@ const AppNavigator = () => {
                 screenOptions={{
                     headerShown: false
                 }}
-                initialRouteName="Reason"
+                initialRouteName="Home"
             >
                 <Stack.Screen
                     name="Home"
