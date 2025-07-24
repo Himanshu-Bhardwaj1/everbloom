@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal } from 'reac
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { BASE_URL } from '../util/Config';
 
 const iconOptions = [
     { name: 'heart', label: 'Heart', lib: FontAwesome5 },
@@ -12,7 +13,7 @@ const iconOptions = [
 ];
 
 
-const API_URL = "http://localhost:8080/milestone";
+const API_URL = BASE_URL + "/milestone";
 const AddStoryBottomSheet = (props) => {
     const snapPoints = useMemo(() => ['50%', '90%'], []);
 

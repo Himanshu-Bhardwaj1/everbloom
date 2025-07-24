@@ -9,6 +9,9 @@ import HomeScreen from '../screens/HomeScreen'
 import ChatScreen from '../screens/ChatScreen'
 import Layout from './Layout'
 import ReasonsScreen from '../screens/ReasonScreen'
+import ReasonCard from './ReasonCard'
+import ReasonScreen from '../screens/ReasonScreen'
+import TimerScreen from '../screens/TimerScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -40,7 +43,7 @@ const ChatScreenWrapper = () => (
 
 const ReasonScreenWrapper = () => (
     <Layout>
-        <ReasonsScreen />
+        <ReasonScreen />
     </Layout>
 )
 
@@ -51,7 +54,7 @@ const AppNavigator = () => {
                 screenOptions={{
                     headerShown: false
                 }}
-                initialRouteName="Home"
+                initialRouteName="Reason"
             >
                 <Stack.Screen
                     name="Home"

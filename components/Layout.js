@@ -14,11 +14,11 @@ const Layout = ({ children }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF5F7', // fallback for pink-50
+        backgroundColor: '#FFF5F7',
     },
     content: {
         flex: 1,
-        paddingBottom: 64, // similar to pb-16
+        paddingBottom: 64,
     },
 });
 

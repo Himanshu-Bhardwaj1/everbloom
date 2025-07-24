@@ -11,10 +11,11 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { showError, showInfo } from './GlobalErrorCard';
 import { Platform } from 'react-native';
+import { BASE_URL } from '../util/Config';
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dq9a9g7en/image/upload';
 const CLOUDINARY_PRESET = 'my_app_preset';
-const API_URL = 'http://localhost:8080/memories';
+const API_URL = BASE_URL + '/memories';
 
 const AddMemoryModal = (props) => {
     const [imageUri, setImageUri] = useState(null);

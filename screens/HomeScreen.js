@@ -7,10 +7,17 @@ import {
     Camera as CameraIcon,
     ScrollText as ScrollTextIcon,
     Calendar as CalendarIcon,
+    Heart,
 } from 'lucide-react-native'
+import ConfettiButton from '../components/ConfettiButton'
 
 const HomeScreen = () => {
     const navigation = useNavigation()
+    /*************  ✨ Windsurf Command ⭐  *************/
+    /**
+     * Calculates the time remaining until the next occurrence of August 3rd.
+    
+    /*******  d9e51269-3a65-43b4-a886-30ff3f74281e  *******/
     const calculateDaysUntil = () => {
         const today = new Date()
         const birthday = new Date(today.getFullYear(), 7, 3)
@@ -47,7 +54,7 @@ const HomeScreen = () => {
                     <Text style={styles.avatarText}>H&amp;P</Text>
                 </View>
                 <Text style={styles.headerTitle}>Our Haven</Text>
-                <SettingsIcon size={20} color="#be185d" />
+                <Heart size={20} color="#be185d" />
             </View>
             {/* Birthday Countdown Card */}
             <View style={styles.card}>
@@ -70,55 +77,7 @@ const HomeScreen = () => {
                     </View>
                 </View>
                 <Text style={styles.cardFooter}>Get ready for the celebration!</Text>
-            </View>
-            {/* What's New Section */}
-            <Text style={styles.sectionTitle}>What's New?</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-                <View style={styles.newsCard}>
-                    <View style={styles.newsHeader}>
-                        <MessageCircleIcon size={16} color="#ec4899" style={{ marginRight: 6 }} />
-                        <Text style={styles.newsTitle}>New message</Text>
-                    </View>
-                    <Text style={styles.newsDesc}>from Emma!</Text>
-                </View>
-                <View style={styles.newsCard}>
-                    <View style={styles.newsHeader}>
-                        <CameraIcon size={16} color="#ec4899" style={{ marginRight: 6 }} />
-                        <Text style={styles.newsTitle}>New memory</Text>
-                    </View>
-                    <Text style={styles.newsDesc}>added yesterday!</Text>
-                </View>
-                <View style={styles.newsCard}>
-                    <View style={styles.newsHeader}>
-                        <ScrollTextIcon size={16} color="#ec4899" style={{ marginRight: 6 }} />
-                        <Text style={styles.newsTitle}>New chapter</Text>
-                    </View>
-                    <Text style={styles.newsDesc}>in our story!</Text>
-                </View>
-            </ScrollView>
-            {/* Quick Access Buttons */}
-            <View style={styles.quickAccessRow}>
-                <TouchableOpacity
-                    style={styles.quickButton}
-                    onPress={() => navigation.navigate('Chat')}
-                >
-                    <MessageCircleIcon size={24} color="#ec4899" style={{ marginBottom: 6 }} />
-                    <Text style={styles.quickButtonText}>Open Chat</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.quickButton}
-                    onPress={() => navigation.navigate('Memories')}
-                >
-                    <CameraIcon size={24} color="#ec4899" style={{ marginBottom: 6 }} />
-                    <Text style={styles.quickButtonText}>Add Memory</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.quickButton}
-                    onPress={() => navigation.navigate('Timeline')}
-                >
-                    <ScrollTextIcon size={24} color="#ec4899" style={{ marginBottom: 6 }} />
-                    <Text style={styles.quickButtonText}>Our Story</Text>
-                </TouchableOpacity>
+                <ConfettiButton />
             </View>
         </ScrollView>
     )
@@ -127,7 +86,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff7ed',
+        backgroundColor: '#0e0e0e', // Dark background
         padding: 16,
     },
     header: {
@@ -141,32 +100,32 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#fbcfe8',
+        backgroundColor: '#facc15', // Yellow background
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 2,
-        borderColor: '#f9a8d4',
+        borderColor: '#f59e0b',
         overflow: 'hidden',
     },
     avatarText: {
-        color: '#be185d',
+        color: '#0e0e0e', // Text on yellow
         fontWeight: 'bold',
         fontSize: 16,
     },
     headerTitle: {
-        fontSize: 20,
+        fontSize: 22,
         fontFamily: 'serif',
-        color: '#be185d',
+        color: '#facc15', // Gold/yellow title
     },
     card: {
-        backgroundColor: '#ffe4e6',
+        backgroundColor: '#1c1917', // Dark card
         borderRadius: 20,
         padding: 20,
         marginBottom: 24,
-        shadowColor: '#fbbf24',
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 2,
+        shadowColor: '#facc15',
+        shadowOpacity: 0.2,
+        shadowRadius: 12,
+        elevation: 3,
     },
     cardHeader: {
         flexDirection: 'row',
@@ -176,7 +135,7 @@ const styles = StyleSheet.create({
     cardTitle: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#be185d',
+        color: '#facc15',
     },
     countdownRow: {
         flexDirection: 'row',
@@ -189,22 +148,22 @@ const styles = StyleSheet.create({
     countdownValue: {
         fontSize: 28,
         fontWeight: 'bold',
-        color: '#9d174d',
+        color: '#facc15',
     },
     countdownLabel: {
         fontSize: 12,
-        color: '#db2777',
+        color: '#fcd34d',
     },
     cardFooter: {
         textAlign: 'center',
         marginTop: 12,
         fontSize: 14,
-        color: '#db2777',
+        color: '#fcd34d',
     },
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#be185d',
+        color: '#ef4444', // Festive red
         marginBottom: 12,
     },
     horizontalScroll: {
@@ -214,15 +173,12 @@ const styles = StyleSheet.create({
     },
     newsCard: {
         width: 140,
-        backgroundColor: '#fff',
+        backgroundColor: '#1c1917',
         borderRadius: 14,
         padding: 12,
         marginRight: 16,
-        shadowColor: '#fbbf24',
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
         borderWidth: 1,
-        borderColor: '#ffe4e6',
+        borderColor: '#3f3f46',
     },
     newsHeader: {
         flexDirection: 'row',
@@ -232,11 +188,11 @@ const styles = StyleSheet.create({
     newsTitle: {
         fontSize: 14,
         fontWeight: '500',
-        color: '#be185d',
+        color: '#facc15',
     },
     newsDesc: {
         fontSize: 12,
-        color: '#52525b',
+        color: '#d4d4d8',
     },
     quickAccessRow: {
         flexDirection: 'row',
@@ -245,21 +201,19 @@ const styles = StyleSheet.create({
     },
     quickButton: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#1c1917',
         borderRadius: 14,
         padding: 16,
         alignItems: 'center',
         marginHorizontal: 4,
         borderWidth: 1,
-        borderColor: '#ffe4e6',
-        shadowColor: '#fbbf24',
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
+        borderColor: '#3f3f46',
     },
     quickButtonText: {
         fontSize: 14,
-        color: '#be185d',
+        color: '#facc15',
     },
 })
+
 
 export default HomeScreen

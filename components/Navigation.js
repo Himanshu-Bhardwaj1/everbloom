@@ -10,21 +10,16 @@ const navItems = [
         icon: Home,
         label: 'Home',
     },
-    {
-        route: 'Chat',
-        icon: MessageCircle,
-        label: 'Chat',
-    },
-    {
-        route: 'Memories',
-        icon: Image,
-        label: 'Memories',
-    },
-    {
-        route: 'Timeline',
-        icon: ScrollText,
-        label: 'Story',
-    },
+    // {
+    //     route: 'Memories',
+    //     icon: Image,
+    //     label: 'Memories',
+    // },
+    // {
+    //     route: 'Timeline',
+    //     icon: ScrollText,
+    //     label: 'Story',
+    // },
     {
         route: 'Reason',
         icon: ScrollText,

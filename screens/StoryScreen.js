@@ -4,6 +4,7 @@ import { ArrowLeft, Plus, Heart, Coffee, Gift, Home, Plane } from 'lucide-react-
 import React, { useEffect, useState, useRef } from 'react'
 import Icon from 'react-native-vector-icons/Feather';
 import AddStoryBottomSheet from '../components/AddStoryBottomSheet'
+import { BASE_URL } from '../util/Config';
 
 
 const StoryScreen = () => {
@@ -17,7 +18,7 @@ const StoryScreen = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await fetch('http://localhost:8080/milestone')
+                const response = await fetch(BASE_URL + '/milestone')
                 console.log('Raw response:', response) // logs status, headers, etc.
 
                 const data = await response.json()
@@ -89,100 +90,126 @@ const StoryScreen = () => {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fdf2f8' },
+    container: {
+        flex: 1,
+        backgroundColor: '#0a0a0a', // deep black background
+    },
+
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#fff',
+        backgroundColor: '#1c1c1e',
         paddingHorizontal: 16,
         paddingVertical: 14,
-        shadowColor: '#000',
-        shadowOpacity: 0.04,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 2,
+        borderBottomWidth: 1,
+        borderBottomColor: '#27272a',
     },
-    headerIcon: { marginRight: 8 },
+
+    headerIcon: {
+        marginRight: 8,
+    },
+
     headerTitle: {
-        fontSize: 22,
-        color: '#be185d',
+        fontSize: 24,
+        color: '#facc15', // golden yellow (like in "Our Haven")
         fontFamily: 'serif',
         fontWeight: 'bold',
     },
+
     timelineContainer: {
         padding: 16,
         paddingLeft: 32,
         paddingBottom: 100,
     },
+
     timelineLine: {
         position: 'absolute',
         left: 8,
         top: 0,
         bottom: 0,
         width: 2,
-        backgroundColor: '#fbcfe8',
+        backgroundColor: '#52525b',
     },
+
     eventContainer: {
         marginBottom: 32,
         flexDirection: 'row',
         alignItems: 'flex-start',
         position: 'relative',
     },
+
     timelineDot: {
         position: 'absolute',
         left: -32,
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: '#fce7f3',
+        backgroundColor: '#27272a',
         borderWidth: 2,
-        borderColor: '#f9a8d4',
+        borderColor: '#f472b6',
+        shadowColor: '#000',
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+        elevation: 2,
         alignItems: 'center',
         justifyContent: 'center',
         top: 0,
     },
+
     eventCard: {
-        backgroundColor: '#fff',
-        borderRadius: 12,
-        padding: 16,
+        backgroundColor: 'rgba(28, 28, 30, 0.85)',
+        borderRadius: 16,
+        padding: 20,
         borderWidth: 1,
-        borderColor: '#fdf2f8',
+        borderColor: '#3f3f46',
         shadowColor: '#000',
-        shadowOpacity: 0.03,
-        shadowOffset: { width: 0, height: 1 },
-        elevation: 1,
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+        elevation: 4,
         flex: 1,
     },
+
     eventDate: {
-        color: '#ec4899',
-        fontSize: 13,
+        color: '#facc15', // golden yellow for date
+        fontSize: 12,
         fontWeight: '500',
         marginBottom: 4,
     },
+
     eventTitle: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: '#be185d',
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#facc15', // golden yellow title (highlight)
+        fontFamily: 'serif',
         marginBottom: 6,
     },
+
     eventDesc: {
-        fontSize: 14,
-        color: '#52525b',
+        fontSize: 15,
+        color: '#e4e4e7', // light gray for content
+        lineHeight: 20,
     },
+
     fab: {
         position: 'absolute',
         right: 24,
         bottom: 40,
-        backgroundColor: '#ec4899',
+        backgroundColor: '#f472b6', // pink FAB
         borderRadius: 28,
-        padding: 16,
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOpacity: 0.15,
-        shadowOffset: { width: 0, height: 2 },
+        padding: 18,
+        elevation: 6,
+        shadowColor: '#f472b6',
+        shadowOpacity: 0.5,
+        shadowOffset: { width: 0, height: 3 },
+        shadowRadius: 6,
         alignItems: 'center',
         justifyContent: 'center',
     },
 })
+
+
 
 export default StoryScreen
