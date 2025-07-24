@@ -8,72 +8,150 @@ import {
     TouchableOpacity,
     Modal,
     Animated,
-    StatusBar,
-    Dimensions
+    ScrollView,
+    SafeAreaView,
+    StatusBar
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { BASE_URL } from '../util/Config';
+import { Dimensions } from 'react-native';
+import ConfettiScreen from '../components/ConfettiButton';
+import { Ionicons } from '@expo/vector-icons'
+const { width, height } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.8;  // 80% of screen width
+const CARD_HEIGHT = height * 0.6;
 
-const screenWidth = Dimensions.get('window').width
-const screenHeight = Dimensions.get('window').height
-const CARD_MARGIN = 12
-const CARD_WIDTH = (screenWidth - CARD_MARGIN * 3) / 2
 
-const initialReasons = [
-    { id: '0', title: 'You’re the light of my life 💖', image: { uri: 'https://res.cloudinary.com/dq9a9g7en/image/upload/v1752613266/dq2dcducif3pdhmyiffm.jpg' }, openedOn: "2025-07-19" },
-    { id: '1', title: 'Reason 1', image: { uri: 'https://res.cloudinary.com/dq9a9g7en/image/upload/v1752613266/dq2dcducif3pdhmyiffm.jpg' }, openedOn: "2025-07-19" },
-    { id: '2', title: 'Reason 2', image: { uri: 'https://res.cloudinary.com/dq9a9g7en/image/upload/v1752613266/dq2dcducif3pdhmyiffm.jpg' }, openedOn: "2025-07-19" },
-    { id: '3', title: 'Reason 3', image: { uri: 'https://res.cloudinary.com/dq9a9g7en/image/upload/v1752613266/dq2dcducif3pdhmyiffm.jpg' }, openedOn: "2025-07-19" },
-    { id: '4', title: 'Reason 4', image: { uri: 'https://res.cloudinary.com/dq9a9g7en/image/upload/v1752613266/dq2dcducif3pdhmyiffm.jpg' }, openedOn: "2025-07-19" },
-    { id: '5', title: 'Reason 5', image: { uri: 'https://res.cloudinary.com/dq9a9g7en/image/upload/v1752613266/dq2dcducif3pdhmyiffm.jpg' }, openedOn: "2025-07-19" },
-    { id: '6', title: 'Reason 6', image: { uri: 'https://res.cloudinary.com/dq9a9g7en/image/upload/v1752613266/dq2dcducif3pdhmyiffm.jpg' }, openedOn: "2025-07-19" },
-];
+const numberImages = {
+    1: require('../assets/number/1.png'),
+    2: require('../assets/number/2.png'),
+    3: require('../assets/number/3.png'),
+    4: require('../assets/number/4.png'),
+    5: require('../assets/number/5.png'),
+    6: require('../assets/number/6.png'),
+    7: require('../assets/number/7.png'),
+    8: require('../assets/number/8.png'),
+    9: require('../assets/number/9.png'),
+    10: require('../assets/number/10.png'),
+};
+
 
 export default function ReasonScreen() {
-    const [reasons, setReasons] = useState(initialReasons);
+    const navigation = useNavigation()
+    const [reasons, setReasons] = useState([]);
     const [todayReason, setTodayReason] = useState(null);
     const [showRevealModal, setShowRevealModal] = useState(false);
     const [flipAnim] = useState(new Animated.Value(0));
     const [revealQueue, setRevealQueue] = useState([]);
     const [selectedReason, setSelectedReason] = useState(null);
+    const [isFlipped, setIsFlipped] = useState(false)
+    const [showConfetti, setShowConfetti] = useState(false)
+    const fetchReasons = async () => {
+        try {
+            const response = await fetch(BASE_URL + '/reason');
+            const data = await response.json();
+            const reasonsList = data.data.reasons;
 
+            setReasons(reasonsList);
+            console.log(reasonsList);
+
+            // Trigger modal if any reason should be revealed today
+            const revealableReasons = reasonsList.filter(
+                r => !r.opened && r.revealOn <= Date.now()
+            );
+
+            if (revealableReasons.length > 0) {
+                setRevealQueue(revealableReasons);
+                setTodayReason(revealableReasons[0]);
+                setShowRevealModal(true);
+            }
+
+        } catch (error) {
+            console.error('Failed to fetch reasons:', error);
+        }
+    };
 
 
     useEffect(() => {
-        const unopenedReasons = reasons.filter(r => !r.openedOn);
-        if (unopenedReasons.length > 0) {
-            setRevealQueue(unopenedReasons);
-            setTodayReason(unopenedReasons[0]);
-            setShowRevealModal(true);
-        }
+        fetchReasons();
     }, []);
+
+    // const handleFlip = () => {
+    //     Animated.timing(flipAnim, {
+    //         toValue: 180,
+    //         duration: 600,
+    //         useNativeDriver: true,
+    //     }).start(async () => {
+    //         try {
+    //             var url = BASE_URL + `/reason/opened/${todayReason.id}`
+    //             await fetch(url, {
+    //                 method: 'POST'
+    //             });
+    //         } catch (error) {
+    //             console.error('Failed to mark reason as opened:', error);
+    //         }
+
+    //         const updatedReasons = reasons.map(r =>
+    //             r.id === todayReason.id ? { ...r, opened: true } : r
+    //         );
+    //         setReasons(updatedReasons);
+
+    //         const remainingQueue = revealQueue.slice(1);
+    //         setTimeout(() => {
+    //             if (remainingQueue.length > 0) {
+    //                 setRevealQueue(remainingQueue);
+    //                 setTodayReason(remainingQueue[0]);
+    //                 flipAnim.setValue(0);
+    //             } else {
+    //                 setShowRevealModal(false);
+    //             }
+    //         }, 3000);
+    //     });
+    // };
+
 
     const handleFlip = () => {
         Animated.timing(flipAnim, {
             toValue: 180,
             duration: 600,
             useNativeDriver: true,
-        }).start(() => {
-            const today = new Date().toISOString().split('T')[0];
+        }).start(async () => {
+            // Trigger confetti when flip completes
+            setIsFlipped(true)
+            setShowConfetti(true)
+
+            try {
+                var url = BASE_URL + `/reason/opened/${todayReason.id}`
+                await fetch(url, {
+                    method: 'POST'
+                });
+            } catch (error) {
+                console.error('Failed to mark reason as opened:', error);
+            }
 
             const updatedReasons = reasons.map(r =>
-                r.id === todayReason.id ? { ...r, openedOn: today } : r
+                r.id === todayReason.id ? { ...r, opened: true } : r
             );
             setReasons(updatedReasons);
 
             const remainingQueue = revealQueue.slice(1);
-
             setTimeout(() => {
                 if (remainingQueue.length > 0) {
                     setRevealQueue(remainingQueue);
                     setTodayReason(remainingQueue[0]);
                     flipAnim.setValue(0);
+                    // Reset confetti state for next card
+                    setIsFlipped(false);
+                    setShowConfetti(false);
                 } else {
                     setShowRevealModal(false);
+                    // Reset confetti state when closing modal
+                    setIsFlipped(false);
+                    setShowConfetti(false);
                 }
             }, 3000);
         });
     };
-
 
     const frontInterpolate = flipAnim.interpolate({
         inputRange: [0, 180],
@@ -88,21 +166,19 @@ export default function ReasonScreen() {
     const renderItem = ({ item }) => (
         <TouchableOpacity onPress={() => setSelectedReason(item)} style={styles.card} activeOpacity={0.8}>
             <Image source={item.image} style={styles.image} />
-            <View style={styles.captionContainer}>
-                <Text style={styles.caption}>{item.title}</Text>
-            </View>
+            <Text style={styles.label}>{item.title}</Text>
         </TouchableOpacity>
     );
 
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#fff" />
             <View style={styles.header}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Ionicons name="arrow-back" size={24} color="#be185d" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Reasons</Text>
+                <Text style={styles.headerTitle}>Reason</Text>
                 <View style={{ width: 24 }} />
             </View>
 
@@ -124,7 +200,7 @@ export default function ReasonScreen() {
                     <View style={styles.modalOverlay}>
                         <TouchableOpacity style={styles.modalCloseArea} onPress={() => setSelectedReason(null)} />
                         <TouchableOpacity onPress={() => setSelectedReason(null)} style={styles.closeButton}>
-                            <Ionicons name="close" size={30} color="#fff" />
+                            <Text style={styles.closeIconText}>✕</Text>
                         </TouchableOpacity>
                         <View style={styles.selectedReasonModalContent}>
                             <Image source={selectedReason.image} style={styles.selectedReasonImage} />
@@ -148,7 +224,7 @@ export default function ReasonScreen() {
                                         { zIndex: 2, position: 'absolute' }
                                     ]}
                                 >
-                                    <Image source={require('../assets/tap.png')} style={styles.largeImage} />
+                                    <Image source={numberImages[todayReason.no]} style={styles.largeImage} />
                                 </Animated.View>
 
                                 <Animated.View
@@ -160,20 +236,27 @@ export default function ReasonScreen() {
                                 >
                                     <Image source={todayReason.image} style={styles.largeImage} />
                                     <Text style={styles.revealedText}>{todayReason.title}</Text>
+                                    {isFlipped && (
+                                        <ConfettiScreen
+                                            shouldPlay={showConfetti}
+                                            onAnimationFinish={() => setShowConfetti(false)}
+                                        />
+                                    )}
                                 </Animated.View>
                             </View>
                         </TouchableOpacity>
                     </View>
                 </Modal>
             )}
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fdf2f8',
+        backgroundColor: '#0e0e0e', // Dark background
+        padding: 16,
     },
     title: {
         fontSize: 24,
@@ -186,12 +269,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     card: {
-        width: CARD_WIDTH,
-        aspectRatio: 1,
-        margin: CARD_MARGIN / 2,
-        borderRadius: 12,
-        overflow: 'hidden',
-        backgroundColor: '#fff',
+        backgroundColor: '#2a2a2e',
+        borderRadius: 16,
+        padding: 12,
+        marginBottom: 16,
+        width: '48%',
+        alignItems: 'center',
     },
     image: {
         width: '100%',
@@ -214,22 +297,22 @@ const styles = StyleSheet.create({
     },
 
     flipContainer: {
-        width: 300,
-        height: 600,
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
         alignItems: 'center',
         justifyContent: 'center',
         perspective: 1000,
+        overflow: 'visible',
     },
-
     flipCard: {
-        width: 300,
-        height: 600,
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
         backfaceVisibility: 'hidden',
         backgroundColor: 'transparent',
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
-        overflow: 'hidden', // IMPORTANT
+        overflow: 'hidden',
     },
 
     flipCardBack: {
@@ -237,8 +320,8 @@ const styles = StyleSheet.create({
         top: 0,
     },
     largeImage: {
-        width: '100%',
-        height: undefined,
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
         aspectRatio: 1.6,
         resizeMode: 'contain',
         borderRadius: 20,
@@ -290,13 +373,11 @@ const styles = StyleSheet.create({
     },
 
     closeButton: {
-        position: 'absolute',
-        top: 50,
-        right: 20,
-        zIndex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        borderRadius: 25,
-        padding: 10,
+        alignSelf: 'flex-end',
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 25,
+        marginTop: 10,
     },
     closeButtonText: {
         fontWeight: 'bold',
@@ -320,32 +401,32 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     header: {
-        backgroundColor: '#fff',
         flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
         justifyContent: 'space-between',
-        elevation: 2,
+        alignItems: 'center',
+        marginBottom: 24,
+        paddingTop: 8,
+    },
+    avatar: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#facc15', // Yellow background
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderColor: '#f59e0b',
+        overflow: 'hidden',
+    },
+    avatarText: {
+        color: '#0e0e0e', // Text on yellow
+        fontWeight: 'bold',
+        fontSize: 16,
     },
     headerTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#be185d',
+        fontSize: 22,
+        fontFamily: 'serif',
+        color: '#facc15', // Gold/yellow title
     },
-    captionContainer: {
-        position: 'absolute',
-        bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        padding: 8,
-        width: '100%',
-    },
-    caption: {
-        color: '#fff',
-        fontSize: 13,
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-    },
+
 });

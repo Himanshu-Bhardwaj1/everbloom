@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { useNavigation } from '@react-navigation/native'
 import {
     View,
     Text,
@@ -16,17 +17,16 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import AddMemoryModal from '../components/AddMemoryModal'
 import AddStoryBottomSheet from '../components/AddStoryBottomSheet'
+import { BASE_URL } from '../util/Config';
 
 const screenWidth = Dimensions.get('window').width
 const screenHeight = Dimensions.get('window').height
 const CARD_MARGIN = 12
 const CARD_WIDTH = (screenWidth - CARD_MARGIN * 3) / 2
-
-const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dq9a9g7en/image/upload';
-const CLOUDINARY_PRESET = 'my_app_preset';
-const API_URL = 'http://localhost:8080/memories';
+const API_URL = BASE_URL + '/memories';
 
 const MemoriesScreenNew = () => {
+    const navigation = useNavigation()
     const [memories, setMemories] = useState([])
     const [selectedImage, setSelectedImage] = useState(null)
     const [isModalVisible, setIsModalVisible] = useState(false)
@@ -108,7 +108,7 @@ const MemoriesScreenNew = () => {
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#fff" />
             <View style={styles.header}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Ionicons name="arrow-back" size={24} color="#be185d" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Moments</Text>
