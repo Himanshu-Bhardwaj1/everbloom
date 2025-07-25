@@ -12,6 +12,7 @@ import ReasonsScreen from '../screens/ReasonScreen'
 import ReasonCard from './ReasonCard'
 import ReasonScreen from '../screens/ReasonScreen'
 import TimerScreen from '../screens/TimerScreen'
+import Jar from '../screens/Jar'
 
 const Stack = createNativeStackNavigator()
 
@@ -47,6 +48,12 @@ const ReasonScreenWrapper = () => (
     </Layout>
 )
 
+const JarScreenWrapper = () => (
+    <Layout>
+        <Jar />
+    </Layout>
+)
+
 const AppNavigator = () => {
     return (
         <NavigationContainer>
@@ -71,6 +78,10 @@ const AppNavigator = () => {
                 <Stack.Screen
                     name="Reason"
                     component={ReasonScreenWrapper}
+                />
+                <Stack.Screen
+                    name="Jar"
+                    component={JarScreenWrapper}
                 />
             </Stack.Navigator>
         </NavigationContainer>

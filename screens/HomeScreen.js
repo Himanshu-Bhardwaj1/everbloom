@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import LottieView from 'lottie-react-native'
 import {
     Settings as SettingsIcon,
     MessageCircle as MessageCircleIcon,
@@ -13,11 +14,6 @@ import ConfettiButton from '../components/ConfettiButton'
 
 const HomeScreen = () => {
     const navigation = useNavigation()
-    /*************  ✨ Windsurf Command ⭐  *************/
-    /**
-     * Calculates the time remaining until the next occurrence of August 3rd.
-    
-    /*******  d9e51269-3a65-43b4-a886-30ff3f74281e  *******/
     const calculateDaysUntil = () => {
         const today = new Date()
         const birthday = new Date(today.getFullYear(), 7, 3)
@@ -47,41 +43,57 @@ const HomeScreen = () => {
     }, [])
 
     return (
-        <ScrollView style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <View style={styles.avatar}>
-                    <Text style={styles.avatarText}>H&amp;P</Text>
-                </View>
-                <Text style={styles.headerTitle}>Our Haven</Text>
-                <Heart size={20} color="#be185d" />
-            </View>
-            {/* Birthday Countdown Card */}
-            <View style={styles.card}>
-                <View style={styles.cardHeader}>
-                    <CalendarIcon size={20} color="#db2777" style={{ marginRight: 8 }} />
-                    <Text style={styles.cardTitle}>Her Special Day In...</Text>
-                </View>
-                <View style={styles.countdownRow}>
-                    <View style={styles.countdownItem}>
-                        <Text style={styles.countdownValue}>{countdown.days}</Text>
-                        <Text style={styles.countdownLabel}>Days</Text>
+        <View style={{ flex: 1 }}>
+            <ScrollView style={styles.container}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <View style={styles.avatar}>
+                        <Text style={styles.avatarText}>H&amp;P</Text>
                     </View>
-                    <View style={styles.countdownItem}>
-                        <Text style={styles.countdownValue}>{countdown.hours}</Text>
-                        <Text style={styles.countdownLabel}>Hours</Text>
-                    </View>
-                    <View style={styles.countdownItem}>
-                        <Text style={styles.countdownValue}>{countdown.minutes}</Text>
-                        <Text style={styles.countdownLabel}>Mins</Text>
-                    </View>
+                    <Text style={styles.headerTitle}>Our Haven</Text>
+                    <Heart size={20} color="#be185d" />
                 </View>
-                <Text style={styles.cardFooter}>Get ready for the celebration!</Text>
-                <ConfettiButton />
-            </View>
-        </ScrollView>
+
+                {/* Birthday Countdown Card */}
+                <View style={styles.card}>
+                    <View style={styles.cardHeader}>
+                        <CalendarIcon size={20} color="#db2777" style={{ marginRight: 8 }} />
+                        <Text style={styles.cardTitle}>Her Special Day In...</Text>
+                    </View>
+                    <View style={styles.countdownRow}>
+                        <View style={styles.countdownItem}>
+                            <Text style={styles.countdownValue}>{countdown.days}</Text>
+                            <Text style={styles.countdownLabel}>Days</Text>
+                        </View>
+                        <View style={styles.countdownItem}>
+                            <Text style={styles.countdownValue}>{countdown.hours}</Text>
+                            <Text style={styles.countdownLabel}>Hours</Text>
+                        </View>
+                        <View style={styles.countdownItem}>
+                            <Text style={styles.countdownValue}>{countdown.minutes}</Text>
+                            <Text style={styles.countdownLabel}>Mins</Text>
+                        </View>
+                    </View>
+                    <Text style={styles.cardFooter}>Get ready for the celebration!</Text>
+                    <ConfettiButton />
+                </View>
+            </ScrollView>
+
+            <TouchableOpacity onPress={() => {
+                console.log("Presssed");
+                navigation.navigate("Jar")
+            }}>
+                <LottieView
+                    source={require('../assets/gift.json')}
+                    autoPlay
+                    loop
+                    style={styles.giftLottie}
+                />
+            </TouchableOpacity>
+        </View>
     )
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -213,6 +225,15 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#facc15',
     },
+    giftLottie: {
+        position: 'absolute',
+        bottom: 72, // Adjust to sit above bottom nav (try 70–90 depending on your tab height)
+        right: 16,
+        width: 80,
+        height: 80,
+        zIndex: 100,
+        elevation: 10,
+    }
 })
 
 
