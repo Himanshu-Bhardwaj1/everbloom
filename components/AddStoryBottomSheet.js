@@ -52,12 +52,16 @@ const AddStoryBottomSheet = (props) => {
     };
 
     const onChangeDate = (event, selectedDate) => {
-        setPickerVisible(false);
+        showPicker(false);
         if (selectedDate) {
-            showPicker(false);
             setDate(selectedDate);
         }
     };
+
+    const handlePicker = () => {
+        console.log('Picker pressed' + picker);
+        showPicker(true);
+    }
 
     return (
         <Modal visible={props.visible} onClose={props.onClose} animationType="slide">
@@ -91,7 +95,7 @@ const AddStoryBottomSheet = (props) => {
                         value={date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()}
                         onChangeText={(dateString) => setDate(new Date(dateString).toISOString().split('T')[0])}
                     />
-                    <Ionicons name="calendar-outline" size={24} color="#7c3aed" style={{ marginLeft: 8 }} onPress={() => showPicker(true)} />
+                    <Ionicons name="calendar-outline" size={24} color="#d63aed" style={{ marginLeft: 8 }} onPress={() => handlePicker} />
                     {picker && (
                         <DateTimePicker
                             value={date}

@@ -15,11 +15,11 @@ const navItems = [
     //     icon: Image,
     //     label: 'Memories',
     // },
-    // {
-    //     route: 'Timeline',
-    //     icon: ScrollText,
-    //     label: 'Story',
-    // },
+    {
+        route: 'Timeline',
+        icon: ScrollText,
+        label: 'Story',
+    },
     {
         route: 'Reason',
         icon: ScrollText,
