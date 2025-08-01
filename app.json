@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appIcon.png",
+    "owner": "himanshu.bhardwaj.1",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -18,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/appIcon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -29,7 +30,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "95b13007-c118-4d85-9fb3-717dd912f9a7"
+        "projectId": "986557d3-3726-4379-bb91-90817b3dbfc3"
       }
     }
   }

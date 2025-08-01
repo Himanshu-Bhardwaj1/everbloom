@@ -33,6 +33,7 @@ const AddStoryBottomSheet = (props) => {
                 title,
                 description,
                 date: date.toISOString().split('T')[0],
+                icon:
             };
             console.log('Story to save:', story);
 
@@ -88,23 +89,33 @@ const AddStoryBottomSheet = (props) => {
                     onChangeText={setDescription}
                 />
                 <View style={styles.dateRow}>
-                    <TextInput
-                        placeholder="Date"
-                        placeholderTextColor="#a78b9f"
-                        style={[styles.input, { flex: 1 }]}
-                        value={date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()}
-                        onChangeText={(dateString) => setDate(new Date(dateString).toISOString().split('T')[0])}
+                    <TouchableOpacity
+                        style={[styles.input, { flex: 1, justifyContent: 'center' }]}
+                        onPress={handlePicker}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={{ color: '#000' }}>
+                            {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}
+                        </Text>
+                    </TouchableOpacity>
+                    <Ionicons
+                        name="calendar-outline"
+                        size={24}
+                        color="#d63aed"
+                        style={{ marginLeft: 8 }}
+                        onPress={handlePicker}
                     />
-                    <Ionicons name="calendar-outline" size={24} color="#d63aed" style={{ marginLeft: 8 }} onPress={() => handlePicker} />
-                    {picker && (
-                        <DateTimePicker
-                            value={date}
-                            mode="date"
-                            display="default"
-                            onChange={onChangeDate}
-                        />
-                    )}
                 </View>
+
+                {picker && (
+                    <DateTimePicker
+                        value={date}
+                        mode="date"
+                        display="default"
+                        onChange={onChangeDate}
+                    />
+                )}
+
                 <Text style={styles.sectionTitle}>Select Icon</Text>
                 <View style={styles.iconTray}>
                     {iconOptions.map(({ name, label, lib: IconLib }) => {

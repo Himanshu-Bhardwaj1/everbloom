@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Home, MessageCircle, Image, ScrollText } from 'lucide-react-native';
+import { Home, MessageCircle, Image, ScrollText, Sparkle } from 'lucide-react-native';
 
 const navItems = [
     {
@@ -22,7 +22,7 @@ const navItems = [
     },
     {
         route: 'Reason',
-        icon: ScrollText,
+        icon: Sparkle,
         label: 'Reason',
     }
 ];

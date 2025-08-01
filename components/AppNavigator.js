@@ -11,8 +11,13 @@ import Layout from './Layout'
 import ReasonsScreen from '../screens/ReasonScreen'
 import ReasonCard from './ReasonCard'
 import ReasonScreen from '../screens/ReasonScreen'
-import TimerScreen from '../screens/TimerScreen'
 import Jar from '../screens/Jar'
+import SmutScreen from '../screens/SmutScreen'
+import ShirtScreen from '../screens/ShirtScreen'
+import JarScreen from '../screens/JarScreen'
+import LoveNote from '../screens/LoveNote'
+import TreatScreen from '../screens/TreatScreen'
+import BirthdayCelebration from './BirthdayCelebration'
 
 const Stack = createNativeStackNavigator()
 
@@ -50,9 +55,39 @@ const ReasonScreenWrapper = () => (
 
 const JarScreenWrapper = () => (
     <Layout>
-        <Jar />
+        <JarScreen />
     </Layout>
 )
+const SmutScreenWrapper = () => (
+    <Layout>
+        <SmutScreen />
+    </Layout>
+)
+
+const ShirtScreenWrapper = () => (
+    <Layout>
+        <ShirtScreen />
+    </Layout>
+)
+
+const LoveNoteScreenWrapper = () => (
+    <Layout>
+        <LoveNote />
+    </Layout>
+)
+
+const TreatScreenWrapper = () => (
+    <Layout>
+        <TreatScreen />
+    </Layout>
+)
+
+const BirthdayScreenWrapper = () => (
+    <Layout>
+        <BirthdayCelebration />
+    </Layout>
+)
+
 
 const AppNavigator = () => {
     return (
@@ -82,6 +117,26 @@ const AppNavigator = () => {
                 <Stack.Screen
                     name="Jar"
                     component={JarScreenWrapper}
+                />
+                <Stack.Screen
+                    name="Smut"
+                    component={SmutScreenWrapper}
+                />
+                <Stack.Screen
+                    name="Shirt"
+                    component={ShirtScreenWrapper}
+                />
+                <Stack.Screen
+                    name="LoveNote"
+                    component={LoveNoteScreenWrapper}
+                />
+                <Stack.Screen
+                    name="Treat"
+                    component={TreatScreenWrapper}
+                />
+                <Stack.Screen
+                    name="BirthdayCelebration"
+                    component={BirthdayScreenWrapper}
                 />
             </Stack.Navigator>
         </NavigationContainer>

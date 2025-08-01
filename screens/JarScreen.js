@@ -215,7 +215,7 @@ const JarScreen = () => {
         });
     };
 
-    const deleteNote = (index) => {
+    const deleteNote = (id, index) => {
         Alert.alert(
             '💔 Remove Note',
             'Are you sure you want to remove this precious memory?',
@@ -410,7 +410,7 @@ const JarScreen = () => {
                                                 >
                                                     <TouchableOpacity
                                                         onPress={() => openNote(note, index)}
-                                                        onLongPress={() => deleteNote(index)}
+                                                        onLongPress={() => deleteNote(note.id, index)}
                                                         activeOpacity={0.8}
                                                     >
                                                         <View
